@@ -1,0 +1,148 @@
+#include <iostream>
+using namespace std;
+int rows,cols;
+int numberofedges;
+string pattern1,pattern0;
+string maze[100][100];
+//int cost[100][100];
+#define maxsize 2000
+int number1,number2,number3,number4;
+
+typedef struct
+{
+int array[4];
+}ironman;
+
+typedef struct
+{
+    ironman data[maxsize];
+    
+}Jarvis;
+int main() {
+    Jarvis tony;
+    int count=numberofedges+1;
+    cin>>rows;
+    cin>>cols;
+    cin>>pattern1;
+    cin>>pattern0;
+    cin>>numberofedges;
+    
+    for (int i=0; i<numberofedges; i++)
+    {
+        for (int j=0; j<1; j++)
+        {
+            cin>>number1>>number2>>number3>>number4;
+            tony.data[i].array[j]=number1;
+            tony.data[i].array[j+1]=number2;
+            tony.data[i].array[j+2]=number3;
+            tony.data[i].array[j+3]=number4;
+        }
+        
+    }
+    
+    for(int i=0;i<rows;i++)
+    {
+        for(int j=0;j<cols;j++)
+            maze[i][j]=pattern1;
+    }
+    maze[1][1]=pattern0; //'..'
+    
+for (int m=0;m<numberofedges;m++)
+{
+for (int i=0;i<numberofedges;i++)
+ {
+  for (int j=0; j<1; j++)
+  {
+             // add vertice which is not in 0 set,pattern0='..' pattren1='NN'
+     if(maze[tony.data[i].array[j]][tony.data[i].array[j+1]]==pattern0 &&
+        maze[tony.data[i].array[j+2]][tony.data[i].array[j+3]]==pattern1)
+     {
+        //{   //if y not change-> change x;increase or decrease
+         if (tony.data[i].array[j+1]==tony.data[i].array[j+3])
+         {
+             // if array2 > array0-> x increase
+             if(tony.data[i].array[j+2] >tony.data[i].array[j])
+             {
+                 
+                 for(int k=tony.data[i].array[0];k<tony.data[i].array[0]+3;
+                     k++)
+                     maze[k][tony.data[i].array[1]]=pattern0;
+                     i=-1;
+                 
+             }
+             
+             
+        }
+         //if x not change-> change y
+         else if (tony.data[i].array[j]==tony.data[i].array[j+2])
+         {
+             // if array3> array1-> y increase
+             if(tony.data[i].array[j+3] >tony.data[i].array[j+1])
+             {
+                 
+                 for(int k=tony.data[i].array[1];k<tony.data[i].array[1]+3;
+                     k++)
+                     maze[tony.data[i].array[0]][k]=pattern0;
+                 
+                 i=-1;
+                 
+             }
+             
+         }
+     }
+      // add vertice which is not in 0 set,pattern0='..' pattren1='NN'
+    else if(maze[tony.data[i].array[j]][tony.data[i].array[j+1]]==pattern1 &&
+           maze[tony.data[i].array[j+2]][tony.data[i].array[j+3]]==pattern0)
+        {   //if y not change-> change x
+            if (tony.data[i].array[j+1]==tony.data[i].array[j+3])
+            {
+                
+                //else if array2 > array0-> x decrease
+                if (tony.data[i].array[j+2]>tony.data[i].array[j])
+                {
+                    for(int k=tony.data[i].array[j+2];k>tony.data[i].array[j+2]-3;k--)
+                        maze[k][tony.data[i].array[j+3]]=pattern0;
+                    
+                    i=-1;
+                    
+                }
+            }
+            //if x not change-> change y
+            else if (tony.data[i].array[j]==tony.data[i].array[j+2])
+            {
+                
+                //else if array3>array1-> y decrease
+                if (tony.data[i].array[j+3]>tony.data[i].array[j+1])
+                {
+                    for(int k=tony.data[i].array[j+3];k>tony.data[i].array[j+3]-3;k--)
+                        maze[tony.data[i].array[j+2]][k]=pattern0;
+                    
+                    i=-1;
+                    
+                }
+            }
+        }
+  
+        
+            
+     }
+     
+    count=count-1;
+    if (count==0) break;
+     continue;
+ }
+}
+    
+    maze[1][0]=pattern0;
+    maze[rows-2][cols-1]=pattern0;
+    
+    for (int i=0;i<rows;i++)
+    {
+        for(int j=0;j<cols;j++)
+            cout<<maze[i][j];
+            cout<<endl;
+    }
+    
+    return 0;
+}
+
