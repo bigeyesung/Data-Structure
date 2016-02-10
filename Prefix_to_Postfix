@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cstring>
+#include <stack>
+#include <algorithm>
+#define flag '@'
+
+using namespace std;
+bool isoperator(char c)
+{
+    if (c=='+'||c=='-'||c=='*'||c=='/')
+        return true;
+    else
+        return false;
+}
+
+int main()
+{
+    stack<char> tony;
+    char postfix[40], prefix[40];
+    int length,j=0;
+    cin>>prefix;
+    length=strlen(prefix);
+    for(int i=0;i<length;i++)
+    {
+        if(isoperator(prefix[i]))
+            tony.push(prefix[i]);
+        else
+        {
+            postfix[j]=prefix[i];
+            j=j+1;
+            while(!tony.empty() && tony.top()==flag)
+            {
+                tony.pop();
+                postfix[j++]=tony.top();
+                tony.pop();
+            }
+            tony.push(flag);
+        }
+    }
+    //j=j+1;
+    //postfix[j++]=tony.top();
+    //tony.pop();
+    cout<<postfix;
+    return 0;
+}
