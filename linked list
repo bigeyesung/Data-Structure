@@ -1,0 +1,39 @@
+#include <iostream>
+using namespace std;
+class chainnode;
+class chain{
+public:
+private:
+    chainnode*first;
+    
+};
+
+class chainnode
+{
+    friend class chain;
+public:
+    void insert(int d, chainnode*l){
+        if(first==0)
+            first=new chainnode(50,0);
+        else
+            
+            }
+    chainnode(int d,chainnode*l)
+    {
+        data=d;
+        link=l;
+    };
+    int data;
+    chainnode*link;
+};
+
+int main() {
+    chainnode* second=new chainnode(20,0);
+    chainnode*first=new chainnode(10,second);
+    cout<<first->data<<endl;
+    cout<<second->data<<endl;
+    
+    
+    
+    return 0;
+}
