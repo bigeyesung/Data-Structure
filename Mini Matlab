@@ -1,0 +1,401 @@
+#include <iostream>
+#include <string>
+#include "stdio.h"
+#include <fstream>
+#include <stack>
+#define maxsize 100
+using namespace std;
+string InfixtoPostfix(string m);
+string expression;
+char matrixname;
+bool isoperand(char c);
+bool isoperator(char c);
+int judgepri(char op1, char op2);
+int numberofmatrix;
+int row,col,nonzeroterms;
+int maxmatrix[100][100];
+bool IsOperand(char C);
+bool IsOperator(char C);
+int HasHigherPrecedence(char op1, char op2);
+string InfixToPostfix(string expression);
+int numberofexpression;
+
+typedef struct
+{
+    int row,col;
+    int value;
+    char name;
+}Triple;
+
+typedef struct
+{
+    Triple data[maxsize];
+    int m,n,len;//m:row, n:col, len:nonzeroterm
+}TSMatrix;
+
+
+
+
+class Stack
+{
+    int top;
+    int *storage;
+    
+    
+public:
+    Stack(int capacity=100)
+    {
+      storage = new int [capacity];
+      top=-1;
+    }
+    bool IsEmpty()
+    {
+        if(top==-1) return true;
+        else return false;
+        
+    }
+    void Push(char value)
+    {
+      top=top+1;
+      storage[top]=value;
+    }
+    void Pop()
+    {
+        
+        top--;
+        
+    }
+    
+    char topdata()
+    {
+     return storage[top];
+    }
+    ~Stack()
+    {
+        delete [] storage;
+    }
+};
+
+/*class SparseMatrix;
+class MatrixTerm
+{
+    friend SparseMatrix;
+private:
+    int row,col,value;
+};*/
+
+class SparseMatrix
+{
+    int *ptr;
+public:
+    SparseMatrix()
+    {
+        //rows=r;
+        //cols=c;
+        //terms=t;
+        //capacity=r*c;
+        
+    }
+    
+    void Add(TSMatrix A,TSMatrix B, TSMatrix *Q)
+    {
+        int i=0,j=0,k=0;
+        while(i<=A.m && j<=B.n)
+        {
+            if( (A.data[i].row==B.data[j].row && A.data[i].col<B.data[j].col)||A.data[i].row<B.data[j].row)
+            {
+                Q->len++;
+                Q->data[k].row=A.data[i].row;
+                Q->data[k].col=A.data[i].col;
+                Q->data[k].value=A.data[i].value;
+                i++,k++;
+            }
+            else if((A.data[i].row==B.data[j].row && A.data[i].col>B.data[j].col)||A.data[i].row>B.data[j].row)
+            {
+                Q->len++;
+                Q->data[k].row=B.data[j].row;
+                Q->data[k].col=B.data[j].col;
+                Q->data[k].value=B.data[j].value;
+                j++,k++;
+            }
+            else if(A.data[i].row==B.data[j].row && A.data[i].col==B.data[j].col && A.data[i].value+B.data[j].value!=0)
+            {
+                Q->data[k].row=A.data[i].row;
+                Q->data[k].col=A.data[i].col;
+                Q->data[k].value=B.data[j].value+A.data[i].value;
+                i++,k++,j++;
+            }
+            else
+                i++,j++;
+        }
+        while(i<=A.m)
+        {
+            Q->len++;
+            Q->data[k].row=A.data[i].row;
+            Q->data[k].col=A.data[i].col;
+            Q->data[k].value=A.data[i].value;
+            i++,k++;
+        }
+        while(j<=B.n+1)
+        {
+            Q->len++;
+            Q->data[k].row=B.data[j].row;
+            Q->data[k].col=B.data[j].col;
+            Q->data[k].value=B.data[j].value;
+            j++,k++;
+        }
+        
+    }
+    
+    ~SparseMatrix()
+    {
+        
+    }
+private:
+    int rows,cols,terms,capacity;
+    
+};
+
+
+int main()
+{   TSMatrix A,B,*Q,array[50];
+    int j,value;
+    int k=0;
+    //freopen("testdata2-in.txt","r",stdin);
+    //freopen("testdata2-out.txt","w",stdout);
+    cin>>numberofmatrix;
+    //cout<<numberofmatrix<<endl;
+    if(numberofmatrix==2)
+    {
+    //for(int i=0;i<numberofmatrix;i++)
+    //{
+    cin>>matrixname;
+    cout<<matrixname<<endl;
+    cin>>A.m;
+    cin>>A.n;
+    cin>>A.len;
+    cout<<A.m<<" "<<A.n<<" "<<A.len<<endl;
+    for (int k=0; k<A.len; k++)
+     {
+        cin>>A.data[k].row ;
+        cin>>A.data[k].col ;
+        cin>>A.data[k].value;
+        A.len = ++k;
+     }
+    
+    cin>>matrixname;
+    cout<<matrixname<<endl;
+    cin>>B.m;
+    cin>>B.n;
+    cin>>B.len;
+    cout<<B.m<<" "<<B.n<<" "<<B.len<<endl;
+    for (int k=0; k<B.len; k++)
+    {
+        cin>>B.data[k].row ;
+        cin>>B.data[k].col ;
+        cin>>B.data[k].value;
+        B.len = ++k;
+    }
+        cin>>numberofexpression;
+        for(int i=0;i<numberofexpression;i++)
+        {
+            //cout<<"enter expression"<<endl;
+            cin>>expression;
+            string postfix=InfixToPostfix(expression);
+            cout<<postfix<<endl;
+            if (expression=="A+B")
+            {
+                
+            }
+            SparseMatrix tmp;
+            tmp.Add(A,B,Q);
+            
+            
+        }
+
+    }
+    else
+    {
+        for(int i=0;i<numberofmatrix;i++)
+            cin>>matrixname;
+        cout<<matrixname<<endl;
+        cin>>A.m;
+        cin>>A.n;
+        cin>>A.len;
+        cout<<A.m<<" "<<A.n<<" "<<A.len<<endl;
+        for (int k=0; k<A.len; k++)
+        {
+            cin>>A.data[k].row ;
+            cin>>A.data[k].col ;
+            cin>>A.data[k].value;
+            A.len = ++k;
+        }
+    }
+    //}
+    cin>>numberofexpression;
+    for(int i=0;i<numberofexpression;i++)
+    {
+    //cout<<"enter expression"<<endl;
+    cin>>expression;
+    string postfix=InfixToPostfix(expression);
+    cout<<postfix<<endl;
+        
+    }
+    //fclose(stdin);
+    //fclose(stdout);
+    return 0;
+}
+
+// Function to evaluate Postfix expression and return output
+string InfixToPostfix(string expression)
+{
+    // Declaring a Stack from Standard template library in C++.
+    stack<char> S;
+    string postfix = ""; // Initialize postfix as empty string.
+    for(int i = 0;i< expression.length();i++) {
+        
+        // Scanning each character from left.
+        // If character is a delimitter, move on.
+        if(expression[i] == ' ' || expression[i] == ',') continue;
+        
+        // If character is operator, pop two elements from stack, perform operation and push the result back.
+        else if(IsOperator(expression[i]))
+        {
+            while(!S.empty() && S.top() != '(' && HasHigherPrecedence(S.top(),expression[i]))
+            {
+                postfix+= S.top();
+                S.pop();
+            }
+            S.push(expression[i]);
+        }
+        // Else if character is an operand
+        else if(IsOperand(expression[i]))
+        {
+            postfix +=expression[i];
+        }
+        
+        else if (expression[i] == '(')
+        {
+            S.push(expression[i]);
+        }
+        
+        else if(expression[i] == ')')
+        {
+            while(!S.empty() && S.top() !=  '(') {
+                postfix += S.top();
+                S.pop();
+            }
+            S.pop();
+        }
+    }
+    
+    while(!S.empty()) {
+        postfix += S.top();
+        S.pop();
+    }
+    
+    return postfix;
+}
+
+// Function to verify whether a character is english letter or numeric digit.
+// We are assuming in this solution that operand will be a single character
+bool IsOperand(char C)
+{
+    if(C =='\'') return true;
+    
+    if(C >= 'A' && C <= 'Z') return true;
+    return false;
+}
+
+// Function to verify whether a character is operator symbol or not.
+bool IsOperator(char C)
+{
+    if(C == '+' || C == '-' || C == '*' || C == '/' || C== '$')
+        return true;
+    
+    return false;
+}
+
+// Function to verify whether an operator is right associative or not.
+int IsRightAssociative(char op)
+{
+    if(op == '$') return true;
+    return false;
+}
+
+// Function to get weight of an operator. An operator with higher weight will have higher precedence.
+int GetOperatorWeight(char op)
+{
+    int weight = -1;
+    switch(op)
+    {
+        case '+':
+            weight=1;
+            break;
+        case '-':
+            weight = 1;
+            break;
+        case '*':
+            weight=2;
+            break;
+        case '/':
+            weight = 2;
+            break;
+        case '$':
+            weight = 3;
+            break;
+    }
+    return weight;
+}
+
+void TransposeTSMatrix(TSMatrix A, TSMatrix* B)
+{
+    int i,j,k;
+    B->m = A.n;
+    B->n = A.m;
+    B->len = A.len;
+    j=0;
+    
+    for( k=0; k<A.len; ++k)
+    {
+        for( i=0; i<A.len; ++i)
+        {
+            if(A.data[i].col == k)
+            {
+                B->data[j].row = A.data[i].col;
+                B->data[j].col = A.data[i].row;
+                B->data[j].value = A.data[i].value;
+                ++j;
+            }
+        }
+    }
+    
+}
+// Function to perform an operation and return output.
+int HasHigherPrecedence(char op1, char op2)
+{
+    int op1Weight = GetOperatorWeight(op1);
+    int op2Weight = GetOperatorWeight(op2);
+    
+    // If operators have equal precedence, return true if they are left associative. 
+    // return false, if right associative. 
+    // if operator is left-associative, left one should be given priority. 
+    if(op1Weight == op2Weight)
+    {
+        if(IsRightAssociative(op1)) return false;
+        else return true;
+    }
+    return op1Weight > op2Weight ?  true: false;
+}
+
+int PrintSMatrix(TSMatrix M)
+{
+    for(int k=0;k<M.len;k++)
+    {
+     if(M.data[k].value !=0 )
+         cout<<M.data[k].row<<" "<<M.data[k].col<<" "<<M.data[k].value<<endl;
+     else continue;
+    }
+    return 0;
+    
+}
