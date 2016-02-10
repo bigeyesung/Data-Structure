@@ -1,0 +1,388 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <iomanip>
+using namespace std;
+char type;
+int number_of_givenlottery;
+int64_t givenlottery[999][6];
+int64_t bignummber[999];
+int64_t buy_bignummber[9999];
+int64_t number_of_buylottery;
+int64_t buylottery[9999][6];
+int swap(int64_t *m,int64_t*n);
+void selectionSort(int64_t givenlottery[999][6] , int n);
+int64_t binary_search(int64_t *bignummber, int64_t buy_bignummber ,int number_of_givenlottery);
+void sortbignummber(int64_t bignummber[],int number_of_givenlottery);
+void R_SelectionSort(int64_t* bignummber, int n);
+
+void sortAscending ( int64_t givenlottery[999][6], int n );
+
+int main()
+{
+    
+    cin>>type;
+    cin>>number_of_givenlottery;
+    for (int i=0; i<number_of_givenlottery; i++)
+    {
+        for (int j=0; j<6;j++ )
+        {
+            cin>>givenlottery[i][j];
+        }
+    }
+    cin>>number_of_buylottery;
+    for (int i=0; i<number_of_buylottery; i++)
+    {
+        for (int j=0; j<6; j++)
+        {
+            cin>>buylottery[i][j];
+        }
+    }
+    switch(type)
+    {
+        case'S':
+        {   cout<<"S"<<endl;
+            cout<<number_of_givenlottery<<endl;
+            for (int i=0; i<number_of_givenlottery; i++)
+                sort(givenlottery[i], givenlottery[i]+6);
+            
+            for (int i=0; i<number_of_givenlottery; i++)
+            {
+                bignummber[i]= givenlottery[i][0]*10000000000;
+                bignummber[i]+=givenlottery[i][1]*100000000;
+                bignummber[i]+=givenlottery[i][2]*1000000;
+                bignummber[i]+=givenlottery[i][3]*10000;
+                bignummber[i]+=givenlottery[i][4]*100;
+                bignummber[i]+=givenlottery[i][5]*1;
+            }
+            sort(bignummber,bignummber+number_of_givenlottery);
+            
+            for (int i=0; i<number_of_givenlottery; i++)
+            {
+                cout<<setw(2)<<setfill('0')<<bignummber[i]/10000000000<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/100000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/1000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/10000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/100)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/1)%100<<endl;
+            }
+            cout<<number_of_buylottery<<endl;
+            for (int i=0; i<number_of_buylottery; i++)
+                sort(buylottery[i],buylottery[i]+6);
+            
+            for (int i=0; i<number_of_buylottery; i++)
+            {
+                buy_bignummber[i]= buylottery[i][0]*10000000000;
+                buy_bignummber[i]+=buylottery[i][1]*100000000;
+                buy_bignummber[i]+=buylottery[i][2]*1000000;
+                buy_bignummber[i]+=buylottery[i][3]*10000;
+                buy_bignummber[i]+=buylottery[i][4]*100;
+                buy_bignummber[i]+=buylottery[i][5]*1;
+            }
+            
+            for (int i=0; i<number_of_buylottery; i++)
+            {
+                
+                cout<<setw(2)<<setfill('0')<<buy_bignummber[i]/10000000000<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/100000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/1000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/10000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/100)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/1)%100<<" ";
+                
+                int64_t *pos=find (bignummber, bignummber+number_of_givenlottery,buy_bignummber[i] );
+                if(pos==bignummber+number_of_givenlottery &&i==number_of_buylottery-1)
+                    cout<<"N";
+                else if(pos==bignummber+number_of_givenlottery &&i!=number_of_buylottery-1)
+                    cout<<"N"<<endl;
+                else if(pos!=bignummber+number_of_givenlottery &&i==number_of_buylottery-1)
+                    cout<<"Y"<<" "<<(pos-bignummber)+1;
+                else
+                    cout<<"Y"<<" "<<(pos-bignummber)+1<<endl;
+                
+                
+                
+                
+            }
+            return 0;
+        }
+            break;
+        case'I':
+        {
+            cout<<"I"<<endl;
+            cout<<number_of_givenlottery<<endl;
+            for (int i=0; i<number_of_givenlottery; i++)
+            {
+                for (int i=0; i<6; i++)
+                    selectionSort(givenlottery,6);
+                
+                
+            }
+            
+            
+            for (int i=0; i<number_of_givenlottery; i++)
+            {
+                bignummber[i]= givenlottery[i][0]*10000000000;
+                bignummber[i]+=givenlottery[i][1]*100000000;
+                bignummber[i]+=givenlottery[i][2]*1000000;
+                bignummber[i]+=givenlottery[i][3]*10000;
+                bignummber[i]+=givenlottery[i][4]*100;
+                bignummber[i]+=givenlottery[i][5]*1;
+                
+            }
+            
+            for (int i=0; i<number_of_givenlottery; i++)
+                sortbignummber(bignummber,number_of_givenlottery);
+            
+            
+            
+            for (int i=0; i<number_of_givenlottery; i++)
+            {
+                cout<<setw(2)<<setfill('0')<<bignummber[i]/10000000000<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/100000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/1000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/10000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/100)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/1)%100<<endl;
+                
+            }
+            cout<<number_of_buylottery<<endl;
+            
+            for (int i=0; i<number_of_buylottery; i++)
+            {
+                for (int j=0; j<6; j++)
+                    selectionSort(buylottery,6);
+                
+            }
+            
+            for (int i=0; i<number_of_buylottery; i++)
+            {
+                buy_bignummber[i]= buylottery[i][0]*10000000000;
+                buy_bignummber[i]+=buylottery[i][1]*100000000;
+                buy_bignummber[i]+=buylottery[i][2]*1000000;
+                buy_bignummber[i]+=buylottery[i][3]*10000;
+                buy_bignummber[i]+=buylottery[i][4]*100;
+                buy_bignummber[i]+=buylottery[i][5]*1;
+            }
+            
+            for (int i=0; i<number_of_buylottery; i++)
+            {
+                
+                cout<<setw(2)<<setfill('0')<<buy_bignummber[i]/10000000000<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/100000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/1000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/10000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/100)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/1)%100<<" ";
+                
+                int64_t ans= binary_search(bignummber,buy_bignummber[i],number_of_givenlottery);
+                if(ans>=0 && i+1==number_of_buylottery)
+                    cout<<"Y"<<" "<<ans+1;
+                else if(ans>=0 && i<number_of_buylottery)
+                    cout<<"Y"<<" "<<ans+1<<endl;
+                
+                if(ans==-1 && i+1==number_of_buylottery)
+                    cout<<"N";
+                else if(ans==-1 && i<number_of_buylottery)                    cout<<"N"<<endl;
+            }
+        }
+            break;
+        case'R':
+        {
+            cout<<"R"<<endl;
+            cout<<number_of_givenlottery<<endl;
+            for (int i=0; i<number_of_givenlottery; i++)
+            {
+                for (int i=0; i<6; i++)
+                    sortAscending(givenlottery, 6);
+                //R_SelectionSort(*givenlottery,6);
+                
+            }
+            
+            for (int i=0; i<number_of_givenlottery; i++)
+            {
+                bignummber[i]= givenlottery[i][0]*10000000000;
+                bignummber[i]+=givenlottery[i][1]*100000000;
+                bignummber[i]+=givenlottery[i][2]*1000000;
+                bignummber[i]+=givenlottery[i][3]*10000;
+                bignummber[i]+=givenlottery[i][4]*100;
+                bignummber[i]+=givenlottery[i][5]*1;
+                
+            }
+            sortbignummber(bignummber,number_of_givenlottery);
+            
+            
+            for (int i=0; i<number_of_givenlottery; i++)
+            {
+                cout<<setw(2)<<setfill('0')<<bignummber[i]/10000000000<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/100000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/1000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/10000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/100)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(bignummber[i]/1)%100<<endl;
+                
+            }
+            cout<<number_of_buylottery<<endl;
+            
+            for (int i=0; i<number_of_buylottery; i++)
+            {
+                for (int j=0; j<6; j++)
+                    sortAscending(buylottery,6);
+                
+            }
+            for (int i=0; i<number_of_buylottery; i++)
+            {
+                buy_bignummber[i]= buylottery[i][0]*10000000000;
+                buy_bignummber[i]+=buylottery[i][1]*100000000;
+                buy_bignummber[i]+=buylottery[i][2]*1000000;
+                buy_bignummber[i]+=buylottery[i][3]*10000;
+                buy_bignummber[i]+=buylottery[i][4]*100;
+                buy_bignummber[i]+=buylottery[i][5]*1;
+            }
+            
+            for (int i=0; i<number_of_buylottery; i++)
+            {
+                
+                cout<<setw(2)<<setfill('0')<<buy_bignummber[i]/10000000000<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/100000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/1000000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/10000)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/100)%100<<" ";
+                cout<<setw(2)<<setfill('0')<<(buy_bignummber[i]/1)%100<<" ";
+                
+                int64_t ans= binary_search(bignummber,buy_bignummber[i],number_of_givenlottery);
+                if(ans>=0 && i+1==number_of_buylottery)
+                    cout<<"Y"<<" "<<ans+1;
+                else if(ans>=0 && i<number_of_buylottery)
+                    cout<<"Y"<<" "<<ans+1<<endl;
+                
+                if(ans==-1 && i+1==number_of_buylottery)
+                    cout<<"N";
+                else if(ans==-1 && i<number_of_buylottery)                    cout<<"N"<<endl;
+            }
+            
+        }
+            break;
+    }
+    return 0;
+}
+void sortAscending ( int64_t givenlottery[999][6], int n ) {
+    int64_t maxIndex = 0, temp = 0, index = 0;
+    for(int i=0;i<number_of_givenlottery;i++)
+    {
+        for ( index = maxIndex; index < n; index++ )
+        {
+            if ( givenlottery[i][index] > givenlottery[i][maxIndex] )
+            {
+                maxIndex = index;
+            }
+        }
+        temp = givenlottery[i][n-1];
+        givenlottery[i][n-1] = givenlottery[i][maxIndex];
+        givenlottery[i][maxIndex] = temp;
+    }
+    if ( n > 1 ) {
+        sortAscending ( givenlottery, --n ) ;
+    }
+}
+
+//RECURSIVE SELECTION SORT
+void R_SelectionSort(int64_t* bignummber, int n)
+{
+    int j=0;
+    if(n==1)
+        return;
+    
+    for(int k=0;k<n;k++)
+        
+        if(bignummber[k]<bignummber[j])
+            j=k;
+    
+    swap(bignummber[0],bignummber[j]);
+    
+    R_SelectionSort(bignummber+1, n-1);
+    
+    
+    
+    
+}
+
+//ITERATIVE SORTING
+int swap(int64_t *m,int64_t*n)
+{
+    int64_t tmp = *m;
+    *m= *n;
+    *n= tmp;
+    return 0;
+}
+
+void selectionSort(int64_t givenlottery[999][6], int n)
+{
+    int i,j,max;
+    for(int k=0; k<number_of_givenlottery;k++)
+    {
+        
+        for (i=0;i<n;i++)
+        {
+            max=i;
+            for(j=i+1;j<n;j++)
+                if(givenlottery[k][j]<givenlottery[k][max])
+                    max=j;
+            swap(givenlottery[k][i],givenlottery[k][max]);
+        }
+    }
+}
+
+
+void sortbignummber(int64_t bignummber[],int number_of_givenlottery)
+{
+    int i,j,max;
+    for (i=0;i<number_of_givenlottery;i++)
+    {
+        max=i;
+        for(j=i+1;j<number_of_givenlottery;j++)
+            if(bignummber[j]<bignummber[max])
+                max=j;
+        swap(bignummber[i],bignummber[max]);
+    }
+}
+// ITERATIVE BINARY SEARCH
+
+int64_t binary_search(int64_t *bignummber, int64_t buy_bignummber ,int number_of_givenlottery)
+{
+    for(int i=0;i<number_of_givenlottery;i++)
+    {
+        int left=0,right=number_of_givenlottery-1;
+        while (left<=right)
+        {
+            int middle=(left+right)/2;
+            if (buy_bignummber< bignummber[middle])
+                right=middle-1;
+            
+            else if (buy_bignummber> bignummber[middle])
+                left=middle+1;
+            
+            else
+                return middle;
+            
+        }
+        
+    }
+    return -1;
+    
+}
+//RECURSIVE BINARY SEARCH
+/*int rbinary_search(int a[], int left, int right, int key) {
+ 
+ if (left <= right) {
+ int middle = (left+right) / 2;
+ if (key == a[middle])
+ return middle;
+ else if (key < a[middle])
+ 
+ return rbinary_search(a, left, middle-1, key);
+ else
+ return rbinary_search(a, middle+1, right, key);
+ }
+ return -(left + 1);    // failed to find key
+ }*/
